@@ -128,7 +128,7 @@ var grid;
 function main(){
     clearInterval(interval);
     ctx.fillRect(0,0,canvas.width,canvas.height);
-    let division = 5;
+    let division = 1;
     grid = new Grid(canvas.width/division, canvas.height/division, division);
     for(let i = 0; i < numAnts; i++){
         let x = Math.floor(Math.random()*grid.width);
