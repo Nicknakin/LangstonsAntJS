@@ -197,7 +197,8 @@ HzSlider.oninput = function(){
     dirty = true;
     Hz = this.value;
     clearInterval(interval);
-    interval = setInterval(updateLoop, 1000/Hz);
+    if(Hz != 0)
+        interval = setInterval(updateLoop, 1000/Hz);
 }
 
 stepsPerCallSlider.oninput = function(){
