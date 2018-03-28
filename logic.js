@@ -19,6 +19,13 @@ class Box{
         this.y = y*size;
         this.state = (!state)? 0: state;
         this.color = (!color)? defaultColor: color;
+        this.draw = true;
+    }
+
+    update(color){
+        this.state = !this.state;
+        this.color = (this.state)? color: defaultColor;
+        this.draw = true;
     }
 }
 
@@ -45,9 +52,8 @@ class Ant{
 
     moveForward(box){
         if(!box) return;
-        box.state = !box.state;
-        box.color = (!box.state)? defaultColor: this.color;
-        if(!box.state)
+        box.update(this.color);
+        if(box.state)
             this.turnRight();
         else
             this.turnLeft();
@@ -100,7 +106,8 @@ class Grid{
         let temp = [];
         for(let i = 0; i < this.height; i++){
             for(let k = 0; k < this.width; k++){
-                temp.push(this.blocks[i][k]);
+                if(this.blocks[i][k].draw)
+                    temp.push(this.blocks[i][k]);
             }
         }
         return temp;
@@ -121,7 +128,7 @@ var grid;
 function main(){
     clearInterval(interval);
     ctx.fillRect(0,0,canvas.width,canvas.height);
-    let division = 10;
+    let division = 5;
     grid = new Grid(canvas.width/division, canvas.height/division, division);
     for(let i = 0; i < numAnts; i++){
         let x = Math.floor(Math.random()*grid.width);
@@ -135,7 +142,7 @@ function main(){
     startTime = new Date();
     step = 0;
 
-    interval = setInterval(updateLoop, Math.round(1000/Hz));
+    interval = setInterval(updateLoop, (1000/Hz));
 }
 
 function updateLoop(){
@@ -162,11 +169,11 @@ function update(){
     grid.moveAnts();
     if(step%stepsPerCall == 0){
         let drawables = grid.getAll();
-        for(let i = 0; i < drawables[0].length;){
+        for(let i = 0; i < drawables[0].length; i++){
             let block = drawables[0][i];
-            drawables[0].splice(i,1);
             ctx.fillStyle = block.color;
             ctx.fillRect(block.x, block.y, grid.size, grid.size);
+            block.draw = false;
         }
     }
 }
@@ -189,6 +196,8 @@ numAntsSlider.oninput = function() {
 HzSlider.oninput = function(){
     dirty = true;
     Hz = this.value;
+    clearInterval(interval);
+    interval = setInterval(updateLoop, 1000/Hz);
 }
 
 stepsPerCallSlider.oninput = function(){
