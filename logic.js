@@ -1,7 +1,8 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var defaultColor = "WHITE";
-var wrap = false;
+var wrap = true;
+var numAnts = 1;
 
 class Box{
     constructor(x, y, size, color, state){
@@ -111,8 +112,7 @@ var grid;
 function main(){
     let division = 10;
     grid = new Grid(canvas.width/division, canvas.height/division, division);
-    //grid.addAnt(grid.width/2, grid.height/2, 3,"ORANGE");
-    for(let i = 0; i < 100; i++){
+    for(let i = 0; i < numAnts; i++){
         let x = Math.floor(Math.random()*grid.width);
         let y = Math.floor(Math.random()*grid.height);
         let dir = Math.floor(Math.random()*4);
