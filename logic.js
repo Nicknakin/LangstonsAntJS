@@ -120,6 +120,7 @@ var grid;
 
 function main(){
     clearInterval(interval);
+    ctx.fillRect(0,0,canvas.width,canvas.height);
     let division = 10;
     grid = new Grid(canvas.width/division, canvas.height/division, division);
     for(let i = 0; i < numAnts; i++){
@@ -165,7 +166,7 @@ function update(){
             let block = drawables[0][i];
             drawables[0].splice(i,1);
             ctx.fillStyle = block.color;
-            ctx.fillRect(block.x+1, block.y+1, grid.size-2, grid.size-2);
+            ctx.fillRect(block.x, block.y, grid.size, grid.size);
         }
     }
 }
@@ -176,7 +177,7 @@ function getRandomColor() {
   for (var i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
-  return color;
+  return color + "FF";
 }
 
 // Update the current slider value (each time you drag the slider handle)
