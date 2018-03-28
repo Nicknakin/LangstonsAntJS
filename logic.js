@@ -2,7 +2,11 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var defaultColor = "WHITE";
 var wrap = true;
-var numAnts = 1;
+var numAnts = 100;
+var Hz = 10;
+var step = 0;
+var stepsPerCall = 10;
+var startTime = new Date();
 
 class Box{
     constructor(x, y, size, color, state){
@@ -120,21 +124,38 @@ function main(){
         grid.addAnt(x,y,dir,color);
     }
     
-    interval = setInterval(update, 10);
+    interval = setInterval(updateLoop, Math.round(1000/Hz));
 }
 
-var flag = true;
+function updateLoop(){
+    for(let i = 0; i < stepsPerCall; i++){
+        update();
+    }
+    let currentTime = new Date();
+    let timeDiff = Math.round((currentTime-startTime)/10)/100;
+    let timeEst = step/Hz/stepsPerCall;
+    let timeHang = Math.round((timeDiff-timeEst)*1000)/1000;
+    let info = "Step: " + step;
+    info += "<br />Time Elapsed: " + timeDiff + "s";
+    info += "<br />Hz: " + Hz;
+    info += "<br />Steps Per Update: " + stepsPerCall;
+    info += "<br />Steps per Second: " + stepsPerCall*Hz;
+    info += "<br />Hang Time: " + timeHang + "s";
+    document.getElementById("par").innerHTML = info;
+}
 
 function update(){
-    if(flag) console.log(grid);
+    step++;
     flag = false;
     grid.moveAnts();
-    let drawables = grid.getAll();
-    for(let i = 0; i < drawables[0].length;){
-        let block = drawables[0][i];
-        drawables[0].splice(i,1);
-        ctx.fillStyle = block.color;
-        ctx.fillRect(block.x+1, block.y+1, grid.size-2, grid.size-2);
+    if(step%stepsPerCall == 0){
+        let drawables = grid.getAll();
+        for(let i = 0; i < drawables[0].length;){
+            let block = drawables[0][i];
+            drawables[0].splice(i,1);
+            ctx.fillStyle = block.color;
+            ctx.fillRect(block.x+1, block.y+1, grid.size-2, grid.size-2);
+        }
     }
 }
 
