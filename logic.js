@@ -2,11 +2,16 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var defaultColor = "WHITE";
 var wrap = true;
-var numAnts = 100;
-var Hz = 10;
+var numAntsSlider = document.getElementById("numAnts");
+var HzSlider = document.getElementById("hz");
+var stepsPerCallSlider = document.getElementById("stepsPerCall");
+var numAnts = numAntsSlider.value;
+var Hz = HzSlider.value;;
+var stepsPerCall = stepsPerCallSlider.value;
 var step = 0;
-var stepsPerCall = 10;
 var startTime = new Date();
+
+var dirty = false;
 
 class Box{
     constructor(x, y, size, color, state){
@@ -114,6 +119,7 @@ var interval;
 var grid;
 
 function main(){
+    clearInterval(interval);
     let division = 10;
     grid = new Grid(canvas.width/division, canvas.height/division, division);
     for(let i = 0; i < numAnts; i++){
@@ -124,6 +130,10 @@ function main(){
         grid.addAnt(x,y,dir,color);
     }
     
+    dirty = false;
+    startTime = new Date();
+    step = 0;
+
     interval = setInterval(updateLoop, Math.round(1000/Hz));
 }
 
@@ -138,9 +148,10 @@ function updateLoop(){
     let info = "Step: " + step;
     info += "<br />Time Elapsed: " + timeDiff + "s";
     info += "<br />Hz: " + Hz;
+    info += "<br />Num Ants: " + numAnts;
     info += "<br />Steps Per Update: " + stepsPerCall;
     info += "<br />Steps per Second: " + stepsPerCall*Hz;
-    info += "<br />Hang Time: " + timeHang + "s";
+    if(!dirty) info += "<br />Hang Time: " + timeHang + "s";
     document.getElementById("par").innerHTML = info;
 }
 
@@ -166,6 +177,22 @@ function getRandomColor() {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
+}
+
+// Update the current slider value (each time you drag the slider handle)
+numAntsSlider.oninput = function() {
+    numAnts = this.value;
+    main();
+}
+
+HzSlider.oninput = function(){
+    dirty = true;
+    Hz = this.value;
+}
+
+stepsPerCallSlider.oninput = function(){
+    dirty = true;
+    stepsPerCall = this.value;
 }
 
 main();

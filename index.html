@@ -1,8 +1,22 @@
 <html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+
 <body>
+    <div class="slidecontainer">
+        <input type="range" min="1" max="200" value="100" class="slider" id="numAnts">
+    </div>
+    <div class="slidecontainer">
+        <input type="range" min="1" max="144" value="60" class="slider" id="hz">
+    </div>
+    <div class="slidecontainer">
+        <input type="range" min="1" max="50" value="1" class="slider" id="stepsPerCall">
+    </div> 
     <canvas id="canvas" width="1920" height="1000">
         <script type="text/javascript" src="./logic.js"></script>
     </canvas>
     <p id="par"></p>
+   
 </body>
 </html>
